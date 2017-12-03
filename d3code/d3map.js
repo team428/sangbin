@@ -1,8 +1,6 @@
 var svgWidth = 800;
 var svgHeight = 400;
-
 var dataSet = [];
-
 var circleElements = d3.select("#myGraph")
   .selectAll("circle")
   .data(dataSet)
@@ -19,6 +17,7 @@ circleElements
 	})
   .attr("r", 5)
 
+
 function updateData(){
 		var result=[];
 
@@ -29,6 +28,7 @@ function updateData(){
 			       }return result;
  		       })
 }
+
 
 function updateGraph(){
 	circleElements
@@ -41,13 +41,13 @@ function updateGraph(){
 	  .attr("cy", function(d, i){
 			return svgHeight-d[1];
 		})
-		//데이터 삭제
+
 	circleElements
 		.exit()
 		.remove()
 }
 
 setInterval(function(){
-	dataSet = updateData();	// 데이터 갱신
-	updateGraph();	// 그래프 갱신
+	dataSet = updateData();
+	updateGraph();
 }, 2000);

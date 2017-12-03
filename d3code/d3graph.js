@@ -1,44 +1,25 @@
 var svgWidth = 800;
 var svgHeight = 400;
 
+
 var margin = {top: 40, right: 40, bottom: 60, left: 60},
 		width = svgWidth - margin.left - margin.right,
 		height = svgHeight - margin.top - margin.bottom;
 
 var scale = height/100;
 
-//일단 아무값이나
-var average_tick=10;
-
-var dataSet = [
-	{"time":'10:00',"value":0},
-	{"time":'10:10',"value":20},
-	{"time":'10:20',"value":10},
-	{"time":'10:30',"value":30},
-	{"time":'10:40',"value":50},
-	{"time":'10:50',"value":90},
-	{"time":'11:00',"value":40},
-	{"time":'11:10',"value":20},
-	{"time":'11:20',"value":40},
-	{"time":'11:30',"value":90}
-
-];
 
 var parseDate = d3.time.format('%H:%M').parse;
 var formatPercent = d3.format(".0%");
 
 
-
-
 var ddata=[];
-for(var i=0;i<dataSet.length;i++){
-	ddata.push({"time" : parseDate(dataSet[i]["time"]) ,"value" : dataSet[i]["value"]});
-}
 
+var average_tick=10;
 
 
 drawScale();
-drawGraph(dataSet, "graphline", "cardinal");
+drawGraph(ddata, "graphline", "cardinal");
 
 
 function drawGraph(dataSet, cssClassName, type){
@@ -55,16 +36,13 @@ function drawGraph(dataSet, cssClassName, type){
 		})
 	  .interpolate(type)
 
-
 	var lineElements = d3.select("#myGraph2")
 	  .append("path")
 	  .attr("class", "line "+cssClassName)
+	  .attr("d", area(dataSet))
 		.transition()
 		.duration(2000)
-	  .attr("d", area(dataSet))
 
-
-	//데이터 삭제
 	lineElements
 		.exit()
 		.remove()
@@ -159,52 +137,26 @@ function drawScale(){
 	  .attr("x1", function(d, i){
 			return d + margin.left;
 		})
-	  .attr("y1", svgHeight - margin.bottom)   
+	  .attr("y1", svgHeight - margin.bottom)
 	  .attr("x2", function(d, i){
 			return d + margin.left;
 		})
 	  .attr("y2", svgHeight -margin.bottom - height)
 
-
-
-
 }
 
-/*
-
-//데이터 갱신
 function updateData(){
-		var result=[];
-		result=d3.json("datamap.json",function(error,data){
-			       var result=[];
+
+		 			d3.json("datagraph.json",function(error,data){
 			       for(var i=0;i<data.length;i++){
-				       result.push({"time":data[i]["time"],"value":data[i]["value"]});
+				       ddata.push({"time":parseDate(data[i]["time"]),"value":data[i]["value"]});
 			       }return result;
  		       })
+
 }
 
-*/
-function ani(){
-	dataSet = [
-	 {"time":'10:10',"value":0},
-	 {"time":'10:15',"value":10},
-	 {"time":'10:20',"value":30},
-	 {"time":'10:30',"value":20},
-	 {"time":'10:40',"value":50},
-	 {"time":'10:50',"value":30},
-	 {"time":'11:10',"value":50},
-	 {"time":'11:20',"value":60},
-	 {"time":'11:40',"value":40},
-	 {"time":'12:30',"value":30},
-	 {"time":'12:50',"value":50}
- ];
-
- ddata=[];
- for(var i=0;i<dataSet.length;i++){
- 	ddata.push({"time" : parseDate(dataSet[i]["time"]) ,"value" : dataSet[i]["value"]});
- }
- 	drawScale();
-	drawGraph(dataSet, "graphline", "cardinal");
-}
-
-setTimeout(ani, 2000);
+setInterval(function(){
+ 	updateData();
+	drawScale();
+	drawGraph(ddata, "graphline", "cardinal");
+}, 2000);
