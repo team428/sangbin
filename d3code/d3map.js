@@ -1,6 +1,7 @@
 var svgWidth = 800;
 var svgHeight = 400;
 var dataSet = [];
+
 var circleElements = d3.select("#myGraph")
   .selectAll("circle")
   .data(dataSet)
@@ -17,7 +18,6 @@ circleElements
 	})
   .attr("r", 5)
 
-
 function updateData(){
 		var result=[];
 
@@ -28,7 +28,6 @@ function updateData(){
 			       }return result;
  		       })
 }
-
 
 function updateGraph(){
 	circleElements

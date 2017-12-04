@@ -1,26 +1,20 @@
 var svgWidth = 800;
 var svgHeight = 400;
-
-
 var margin = {top: 40, right: 40, bottom: 60, left: 60},
 		width = svgWidth - margin.left - margin.right,
 		height = svgHeight - margin.top - margin.bottom;
 
 var scale = height/100;
 
-
 var parseDate = d3.time.format('%H:%M').parse;
 var formatPercent = d3.format(".0%");
-
 
 var ddata=[];
 
 var average_tick=10;
 
-
 drawScale();
 drawGraph(ddata, "graphline", "cardinal");
-
 
 function drawGraph(dataSet, cssClassName, type){
 
@@ -48,31 +42,22 @@ function drawGraph(dataSet, cssClassName, type){
 		.remove()
 }
 
-
-
 function drawScale(){
-
 	var average_tick_help=d3.extent ( ddata , function ( d ) { return d['time'] ; } );
 	average_tick = (average_tick_help[1]-average_tick_help[0]) / ( 60 * 1000 * 9);
-
 
 	var vis = d3.select("#myGraph2")
 		.append("svg:svg")
 		.attr("width", svgWidth)
 		.attr("height", svgHeight);
 
-
 	var yScale = d3.scale.linear()
 		.domain([0, 1])
 		.range([height,0]);
 
-
-
 	var xScale = d3.time.scale()
 		.domain( d3.extent ( ddata , function ( d ) { return d['time'] ; } ) )
 		.range([0,width]);
-
-
 
 	var yAxis = d3.svg.axis()
 			.ticks(6)
@@ -80,24 +65,19 @@ function drawScale(){
 			.orient("left")
 			.scale(yScale);
 
-
-
 	var xAxis = d3.svg.axis()
 			.ticks(d3.time.minutes, average_tick)
 			.orient("bottom")
 			.scale(xScale)
 
-
 	vis.append("g")
 			.attr("transform", "translate("+margin.left+","+margin.top+")")
 			.call(yAxis);
-
 
 	vis.append("g")
 			.attr("class", "xaxis")
 			.attr("transform", "translate("+margin.left+"," + (height+margin.top)  + ")")
 			.call(xAxis);
-
 
 	vis.selectAll(".xaxis text")
 			.transition()
@@ -107,13 +87,10 @@ function drawScale(){
 			.attr("dy","0.7em")
 			.style("text-anchor","start")
 
-
-
 	var grid = d3.select("#myGraph2").append("g")
 
 	var rangeX = d3.range( margin.left , width , 70 );
 	var rangeY = d3.range( margin.bottom , height , 70 );
-
 
 	grid.selectAll("line.y")
 	  .data(rangeY)
@@ -142,7 +119,6 @@ function drawScale(){
 			return d + margin.left;
 		})
 	  .attr("y2", svgHeight -margin.bottom - height)
-
 }
 
 function updateData(){
@@ -152,7 +128,6 @@ function updateData(){
 				       ddata.push({"time":parseDate(data[i]["time"]),"value":data[i]["value"]});
 			       }return result;
  		       })
-
 }
 
 setInterval(function(){
